@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+<data>
+    <variable
+        name="uidata"
+        type="com.sh.suhe.demos.mvvm.model.UIData"/>
+    <variable
+        name="viewmodel"
+        type="com.sh.suhe.demos.mvvm.viewmodel.UIViewModel"/>
+</data>
+
+<LinearLayout
+    android:id="@+id/activity_demo_mvvm"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.sh.suhe.demos.mvvm.view.DemoMVVMActivity"
+    android:orientation="vertical">
+    <EditText
+        android:id="@+id/name_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="姓名"
+        android:text="@={uidata.name}"/>
+    <EditText
+        android:id="@+id/age_et"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="年龄"
+        android:text='@={""+uidata.age}'/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="@{viewmodel.saveData}"
+        android:text="保存"/>
+    <TextView
+        android:id="@+id/name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{uidata.name}"/>
+    <TextView
+        android:id="@+id/age_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text='@{""+uidata.age}'/>
+
+</LinearLayout>
+</layout>

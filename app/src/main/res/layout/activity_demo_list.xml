@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="adapter"
+            type="android.widget.BaseAdapter"/>
+        <variable
+            name="listviewmodel"
+            type="com.sh.suhe.demos.mvvm.viewmodel.DemoListViewModel"/>
+    </data>
+
+    <RelativeLayout
+    android:id="@+id/activity_demo_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sh.suhe.demos.mvvm.view.DemoListActivity">
+        <RelativeLayout
+            android:id="@+id/activity_demo_list_top"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/colorPrimary">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:gravity="center_vertical"
+                android:onClick="@{listviewmodel.add}"
+                android:text="新增"/>
+        </RelativeLayout>
+    <ListView
+        android:layout_below="@id/activity_demo_list_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:adapter="@{adapter}"
+        >
+
+    </ListView>
+
+</RelativeLayout>
+</layout>
