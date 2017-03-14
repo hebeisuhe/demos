@@ -18,7 +18,6 @@
         <activity android:name=".mvvm.view.DemoMVVMActivity">
         </activity>
         <activity android:name=".mvvm.view.DemoListActivity">
-
         </activity>
         <activity android:name=".mvvm.view.MainMVVMActivity">
             <intent-filter>
@@ -26,6 +25,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".thread.ThreadActivity">
+        </activity>
+        <activity
+            android:name=".activitylife.LifeLogActivity"
+            android:configChanges="orientation">
+        </activity>
+        <activity android:name=".Gesture.GestureTestActivity">
         </activity>
     </application>
 

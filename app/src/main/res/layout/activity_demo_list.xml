@@ -33,6 +33,7 @@
                 android:text="新增"/>
         </RelativeLayout>
     <ListView
+        android:id="@+id/activity_demo_list_listview"
         android:layout_below="@id/activity_demo_list_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

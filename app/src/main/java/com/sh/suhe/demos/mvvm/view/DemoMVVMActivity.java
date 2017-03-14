@@ -15,7 +15,8 @@ public class DemoMVVMActivity extends  Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityDemoMvvmBinding activityTesBinding = DataBindingUtil.setContentView(this,R.layout.activity_demo_mvvm);
+        ActivityDemoMvvmBinding activityTesBinding = DataBindingUtil.
+                setContentView(this,R.layout.activity_demo_mvvm);
         UIData user = new UIData();
         activityTesBinding.setUidata(user);
         activityTesBinding.setViewmodel(new UIViewModel(this,activityTesBinding));

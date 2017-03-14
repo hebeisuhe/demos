@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.sh.suhe.demos.BR;
+
 import com.sh.suhe.demos.databinding.ActivityDemoMvvmBinding;
 import com.sh.suhe.demos.mvvm.model.UIData;
 
