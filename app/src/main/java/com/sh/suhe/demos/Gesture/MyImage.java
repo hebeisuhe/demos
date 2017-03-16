@@ -198,6 +198,7 @@ public class MyImage extends android.support.v7.widget.AppCompatImageView implem
     @Override
     public void onGlobalLayout() {
         if(once){
+
             int widthScreen = getWidth();
             int heightScreen = getHeight();
             int width = this.getDrawable().getIntrinsicWidth();
