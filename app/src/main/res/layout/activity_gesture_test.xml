@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sh.suhe.demos.Gesture.GestureTestActivity">
-    <com.sh.suhe.demos.Gesture.MyImage
+    android:orientation="vertical"
+     >
+
+    <com.sh.suhe.demos.Gesture.ZoomImageView
         android:id="@+id/gesture_test_img"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="matrix"
+android:visibility="gone"
+        />
+
+    <com.sh.suhe.demos.Gesture.MyImage
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:background="@color/colorPrimaryDark"
+        android:scaleType="matrix"
         android:src="@mipmap/ic_launcher"/>
 
-</android.support.constraint.ConstraintLayout>
+    <com.sh.suhe.demos.Gesture.MyImageMove
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+        android:scaleType="matrix"
+        android:src="@mipmap/ic_launcher"/>
+
+</LinearLayout>
+

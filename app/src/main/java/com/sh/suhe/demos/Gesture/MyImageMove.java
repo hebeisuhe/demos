@@ -1,12 +1,12 @@
 package com.sh.suhe.demos.Gesture;
 
 import android.content.Context;
-import android.gesture.Gesture;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.TintContextWrapper;
 import android.util.AttributeSet;
@@ -16,17 +16,18 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
-import android.widget.Toast;
+
+import com.sh.suhe.demos.utils.ToastUtils;
 
 /**
  * Created by suhe on 2017/3/14.
  * com.sh.suhe.demos.Gesture
  */
 
-public class MyImage extends android.support.v7.widget.AppCompatImageView implements ScaleGestureDetector.OnScaleGestureListener,
-         GestureDetector.OnDoubleTapListener,View.OnTouchListener, ViewTreeObserver.OnGlobalLayoutListener {
-    static String TAG = MyImage.class.getSimpleName();
+public class MyImageMove extends android.support.v7.widget.AppCompatImageView implements
+         GestureDetector.OnDoubleTapListener,View.OnTouchListener
+,GestureDetector.OnGestureListener{
+    static String TAG = MyImageMove.class.getSimpleName();
     GestureDetector gd;
     Context context;
     float SCALE_MAX = 4 ;//最大放大比例
@@ -37,8 +38,8 @@ public class MyImage extends android.support.v7.widget.AppCompatImageView implem
     private  Matrix mMatrix=new Matrix();
     float mImageWidth ;//图片宽度
     float mImageHeight; //图片高度
-    ScaleGestureDetector mScaleGestureDetector;
-    public MyImage(Context context) {
+    GestureDetector mScaleGestureDetector;
+    public MyImageMove(Context context) {
         super(context);
         this.context = context;
         setFocusable(true);
@@ -46,13 +47,13 @@ public class MyImage extends android.support.v7.widget.AppCompatImageView implem
         this.setLongClickable(true);
         this.setOnTouchListener(this);
         setFocusable(true);
-        mScaleGestureDetector = new ScaleGestureDetector(context, this);
+        mScaleGestureDetector = new GestureDetector(context, this);
 //        gd = new GestureDetector(context,this);// 这里或者可以直接传递this参数，因为本类已经继承了OnGestureListener接口，也可以把new
         // MySimpleGesture()，它继承了SimpleOnGestureListener类；，两种方法都可以，只是把两种方法归在一个里面，方便学习；
         // 。实惠屏幕触控事件；
 //        gd.setIsLongpressEnabled(true);
     }
-    public MyImage(Context context, AttributeSet attrs) {
+    public MyImageMove(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
         this.context = context;
         setFocusable(true);
@@ -60,14 +61,14 @@ public class MyImage extends android.support.v7.widget.AppCompatImageView implem
         this.setLongClickable(true);
         this.setOnTouchListener(this);
         setFocusable(true);
-        mScaleGestureDetector = new ScaleGestureDetector(context, this);
+        mScaleGestureDetector = new GestureDetector(context, this);
 //        gd = new GestureDetector(context,this);// 这里或者可以直接传递this参数，因为本类已经继承了OnGestureListener接口，也可以把new
         // MySimpleGesture()，它继承了SimpleOnGestureListener类；，两种方法都可以，只是把两种方法归在一个里面，方便学习；
         // 。实惠屏幕触控事件；
 //        gd.setIsLongpressEnabled(true);
     }
 
-    public MyImage(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MyImageMove(Context context, AttributeSet attrs, int defStyleAttr) {
         super(TintContextWrapper.wrap(context), attrs, defStyleAttr);
         this.context = context;
         setFocusable(true);
@@ -75,8 +76,7 @@ public class MyImage extends android.support.v7.widget.AppCompatImageView implem
         this.setLongClickable(true);
         this.setOnTouchListener(this);
         setFocusable(true);
-        mScaleGestureDetector = new ScaleGestureDetector(context, this);
-        getViewTreeObserver().addOnGlobalLayoutListener(this);
+        mScaleGestureDetector = new GestureDetector(context, this);
 //        gd = new GestureDetector(context,this);// 这里或者可以直接传递this参数，因为本类已经继承了OnGestureListener接口，也可以把new
         // MySimpleGesture()，它继承了SimpleOnGestureListener类；，两种方法都可以，只是把两种方法归在一个里面，方便学习；
         // 。实惠屏幕触控事件；
@@ -150,64 +150,75 @@ public class MyImage extends android.support.v7.widget.AppCompatImageView implem
         mMatrix.getValues(values);
         return values[Matrix.MSCALE_X];
     }
+    float mDistanceX  ;
+    float mDistanceY ;
+    boolean isRun = false;
 
     @Override
-    public boolean onScale(ScaleGestureDetector detector) {
-        float scale = getScale();
-        float scaleFactor = detector.getScaleFactor();
+    public boolean onDown(MotionEvent e) {
+        mDistanceX=0;
+        mDistanceY=0;
+        Log.d(TAG,String.format("onScroll e1 =?  ",e.getAction() ) );
+        return false;
+    }
 
-        if (getDrawable() == null)
-            return true;
+    @Override
+    public void onShowPress(MotionEvent e) {
 
-        /**
-         * 缩放的范围控制
-         */
-        if ((scale < SCALE_MAX && scaleFactor > 1.0f)|| (scale > initScale && scaleFactor < 1.0f))
-        {
-            /**
-             * 最大值最小值判断
-             */
-            if (scaleFactor * scale < initScale)
-            {
-                scaleFactor = initScale / scale;
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+    Handler handler = new Handler();
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            invalidate();
+        }
+    };
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        if(Math.abs(distanceX ) >1 || Math.abs(distanceY )>1 ) {
+            float totalRatio = getScale();
+// 先按照已有的缩放比例对图片进行缩放
+//            mMatrix.postScale(totalRatio, totalRatio);
+// 再根据移动距离进行偏移
+            mDistanceX = distanceX ;
+            mDistanceY = distanceY ;
+            if(!isRun) {
+                isRun = true;
+                handler.postDelayed(runnable, 300);
             }
-            if (scaleFactor * scale > SCALE_MAX)
-            {
-                scaleFactor = SCALE_MAX / scale;
-            }
-            /**
-             * 设置缩放比例
-             */
-            mMatrix.postScale(scaleFactor, scaleFactor, getWidth() / 2,
-                    getHeight() / 2);
+
+        }
+//        ToastUtils.showShort(context,String.format("onScroll e1 =%s distanceX=%s distanceY=%s",e1.getAction(),distanceX,distanceY) );
+        Log.e(TAG,String.format("onScroll e1 =%s  distanceX=%s distanceY=%s",e1.getAction(),distanceX,distanceY) );
+        return false;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if(isRun) {
+            isRun = false;
+            mMatrix.postTranslate(-mDistanceX, -mDistanceY);
             setImageMatrix(mMatrix);
         }
-        return true;
     }
 
     @Override
-    public boolean onScaleBegin(ScaleGestureDetector detector) {
-        return true;
+    public void onLongPress(MotionEvent e) {
+
     }
 
     @Override
-    public void onScaleEnd(ScaleGestureDetector detector) {
-
-    }
-    boolean once = true ;
-    @Override
-    public void onGlobalLayout() {
-        if(once){
-            int widthScreen = getWidth();
-            int heightScreen = getHeight();
-            int width = this.getDrawable().getIntrinsicWidth();
-            int height = this.getDrawable().getIntrinsicHeight();
-            mMatrix.setScale(1,1,widthScreen/2,heightScreen/2);
-            mMatrix.postTranslate((widthScreen-width)/2,(heightScreen-height)/2);
-            setImageMatrix(mMatrix);
-            once = false;
-            getViewTreeObserver().removeOnGlobalLayoutListener(this);
-        }
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+//        ToastUtils.showShort(context,String.format("onFling e1 =%s velocityX=%s velocityY=%s",e1.getAction(),velocityX,velocityY) );
+        Log.d(TAG,String.format("onFling e1 =%s velocityX=%s velocityY=%s",e1.getAction(),velocityX,velocityY) );
+        return false;
     }
 
     /**

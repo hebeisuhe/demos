@@ -1,9 +1,7 @@
 package com.sh.suhe.demos.Gesture;
 
 import android.content.Context;
-import android.gesture.Gesture;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -16,17 +14,15 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 /**
  * Created by suhe on 2017/3/14.
  * com.sh.suhe.demos.Gesture
  */
 
-public class MyImage extends android.support.v7.widget.AppCompatImageView implements ScaleGestureDetector.OnScaleGestureListener,
-         GestureDetector.OnDoubleTapListener,View.OnTouchListener, ViewTreeObserver.OnGlobalLayoutListener {
-    static String TAG = MyImage.class.getSimpleName();
+public class MyImageDouble extends android.support.v7.widget.AppCompatImageView implements ScaleGestureDetector.OnScaleGestureListener,
+         GestureDetector.OnDoubleTapListener,View.OnTouchListener,GestureDetector.OnGestureListener {
+    static String TAG = MyImageDouble.class.getSimpleName();
     GestureDetector gd;
     Context context;
     float SCALE_MAX = 4 ;//最大放大比例
@@ -38,21 +34,22 @@ public class MyImage extends android.support.v7.widget.AppCompatImageView implem
     float mImageWidth ;//图片宽度
     float mImageHeight; //图片高度
     ScaleGestureDetector mScaleGestureDetector;
-    public MyImage(Context context) {
+    public MyImageDouble(Context context) {
         super(context);
         this.context = context;
         setFocusable(true);
         requestFocus();
         this.setLongClickable(true);
         this.setOnTouchListener(this);
+
         setFocusable(true);
         mScaleGestureDetector = new ScaleGestureDetector(context, this);
-//        gd = new GestureDetector(context,this);// 这里或者可以直接传递this参数，因为本类已经继承了OnGestureListener接口，也可以把new
+        gd = new GestureDetector(context,this);// 这里或者可以直接传递this参数，因为本类已经继承了OnGestureListener接口，也可以把new
         // MySimpleGesture()，它继承了SimpleOnGestureListener类；，两种方法都可以，只是把两种方法归在一个里面，方便学习；
         // 。实惠屏幕触控事件；
 //        gd.setIsLongpressEnabled(true);
     }
-    public MyImage(Context context, AttributeSet attrs) {
+    public MyImageDouble(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
         this.context = context;
         setFocusable(true);
@@ -61,13 +58,13 @@ public class MyImage extends android.support.v7.widget.AppCompatImageView implem
         this.setOnTouchListener(this);
         setFocusable(true);
         mScaleGestureDetector = new ScaleGestureDetector(context, this);
-//        gd = new GestureDetector(context,this);// 这里或者可以直接传递this参数，因为本类已经继承了OnGestureListener接口，也可以把new
+        gd = new GestureDetector(context,this);// 这里或者可以直接传递this参数，因为本类已经继承了OnGestureListener接口，也可以把new
         // MySimpleGesture()，它继承了SimpleOnGestureListener类；，两种方法都可以，只是把两种方法归在一个里面，方便学习；
         // 。实惠屏幕触控事件；
 //        gd.setIsLongpressEnabled(true);
     }
 
-    public MyImage(Context context, AttributeSet attrs, int defStyleAttr) {
+    public MyImageDouble(Context context, AttributeSet attrs, int defStyleAttr) {
         super(TintContextWrapper.wrap(context), attrs, defStyleAttr);
         this.context = context;
         setFocusable(true);
@@ -76,8 +73,7 @@ public class MyImage extends android.support.v7.widget.AppCompatImageView implem
         this.setOnTouchListener(this);
         setFocusable(true);
         mScaleGestureDetector = new ScaleGestureDetector(context, this);
-        getViewTreeObserver().addOnGlobalLayoutListener(this);
-//        gd = new GestureDetector(context,this);// 这里或者可以直接传递this参数，因为本类已经继承了OnGestureListener接口，也可以把new
+        gd = new GestureDetector(context,this);// 这里或者可以直接传递this参数，因为本类已经继承了OnGestureListener接口，也可以把new
         // MySimpleGesture()，它继承了SimpleOnGestureListener类；，两种方法都可以，只是把两种方法归在一个里面，方便学习；
         // 。实惠屏幕触控事件；
 //        gd.setIsLongpressEnabled(true);
@@ -88,13 +84,6 @@ public class MyImage extends android.support.v7.widget.AppCompatImageView implem
     public void setImageBitmap(Bitmap bm) {
         Log.d(TAG,"setImageBitmap");
             super.setImageBitmap(bm);
-            //设置完图片后，获取该图片的坐标变换矩阵
-            mMatrix.set(getImageMatrix());
-            float[] values=new float[9];
-            mMatrix.getValues(values);
-            //图片宽度为屏幕宽度除缩放倍数
-            mImageWidth=getWidth()/values[Matrix.MSCALE_X];
-            mImageHeight=(getHeight()-values[Matrix.MTRANS_Y]*2)/values[Matrix.MSCALE_Y];
     }
 
     @Override
@@ -106,7 +95,7 @@ public class MyImage extends android.support.v7.widget.AppCompatImageView implem
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         Log.d(TAG,"onTouch");
-        return mScaleGestureDetector.onTouchEvent(event);
+        return gd.onTouchEvent(event);
     }
 
     @Override
@@ -194,20 +183,35 @@ public class MyImage extends android.support.v7.widget.AppCompatImageView implem
     public void onScaleEnd(ScaleGestureDetector detector) {
 
     }
-    boolean once = true ;
+
     @Override
-    public void onGlobalLayout() {
-        if(once){
-            int widthScreen = getWidth();
-            int heightScreen = getHeight();
-            int width = this.getDrawable().getIntrinsicWidth();
-            int height = this.getDrawable().getIntrinsicHeight();
-            mMatrix.setScale(1,1,widthScreen/2,heightScreen/2);
-            mMatrix.postTranslate((widthScreen-width)/2,(heightScreen-height)/2);
-            setImageMatrix(mMatrix);
-            once = false;
-            getViewTreeObserver().removeOnGlobalLayoutListener(this);
-        }
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        return false;
     }
 
     /**
