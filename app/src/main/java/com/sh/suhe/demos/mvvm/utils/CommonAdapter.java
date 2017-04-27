@@ -2,7 +2,6 @@ package com.sh.suhe.demos.mvvm.utils;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.databinding.tool.store.SetterStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
